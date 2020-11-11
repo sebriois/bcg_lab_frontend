@@ -1,4 +1,4 @@
-export class OrderModel {
+export class Order {
   id: number;
   number: string;
   budget: string;
@@ -6,7 +6,7 @@ export class OrderModel {
   provider: string;
   status: number;
   status_display: string;
-  items: Array<OrderItemModel>;
+  items: Array<OrderItem>;
   notes: string;
   is_confidential: boolean;
   is_urgent: boolean;
@@ -19,7 +19,7 @@ export class OrderModel {
 
 }
 
-export class OrderItemModel {
+export class OrderItem {
   item_type_display: string;
   username: string;
   username_recept: string;

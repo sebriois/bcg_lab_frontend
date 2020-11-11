@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <h4 *ngIf="loading"><i class="fas fa-spin fa-spinner"></i> loading</h4>
+
+  <ng-container *ngIf="!loading">
+    <div class="d-flex justify-content-between mb-2">
+      <h3 class="text-color4">
+        <i class="fa fa-briefcase"></i> Gestion des fournisseurs
+        <small>{{ pagination.totalItems }}</small>
+      </h3>
+      <button (click)="showCreateForm()" class="btn btn-primary">
+        <i class="fas fa-plus"></i> ajouter un fournisseur
+      </button>
+    </div>
+
+    <nav *ngIf="pagination.totalItems > pagination.itemsPerPage">
+      <pagination previousText="&lsaquo;" nextText="&rsaquo;"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [totalItems]="pagination.totalItems"
+                  (pageChanged)="getPage($event)"
+      ></pagination>
+    </nav>
+
+    <table class="table table-bordered table-sm table-striped">
+      <thead class="table-dark bg-gradient-color5">
+      <tr>
+        <th>Fournisseur</th>
+        <th>Responsables</th>
+        <th>Revendeur</th>
+        <th>Notes</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let provider of providers">
+        <td class="align-middle p-1">{{ provider.name }}</td>
+        <td class="align-middle p-1">
+          <p class="m-0" *ngFor="let user of provider.users_in_charge">{{ user.first_name }} {{ user.last_name }}</p>
+        </td>
+        <td class="align-middle p-1">{{ provider.reseller }}</td>
+        <td class="align-middle p-1" style="white-space: pre-line">{{ provider.notes }}</td>
+        <td class="align-middle p-1">
+          <div class="btn-group btn-sm">
+            <button class="btn btn-success btn-sm">
+              <i class="fa fa-download"></i> importer produits
+            </button>
+            <button class="btn btn-primary btn-sm" (click)="showEditForm(provider)">
+              <i class="fa fa-edit"></i> éditer
+            </button>
+            <button class="btn btn-danger btn-sm">
+              <i class="fa fa-trash"></i> supprimer
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <nav *ngIf="pagination.totalItems > pagination.itemsPerPage">
+      <pagination previousText="&lsaquo;" nextText="&rsaquo;"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [totalItems]="pagination.totalItems"
+                  (pageChanged)="getPage($event)"
+      ></pagination>
+    </nav>
+  </ng-container>
+</div>

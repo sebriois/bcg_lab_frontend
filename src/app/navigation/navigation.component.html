@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-color1 mb-4 shadow">
+  <a class="navbar-brand" href="#">
+    <i class="fas fa-home"></i> BCG-Lab <small>{{ displayVersion() }}</small>
+  </a>
+  <button class="navbar-toggler collapsed" type="button" (click)="isCollapsed=!isCollapsed">
+    <span class="fas fa-reorder"></span>
+  </button>
+
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="'/providers'" [routerLinkActive]="'active'">
+          <i class="fas fa-briefcase"></i> Fournisseurs
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="'/products'" [routerLinkActive]="'active'">
+          <i class="fas fa-flask"></i> Produits
+        </a>
+      </li>
+
+      <div class="nav-item dropdown" dropdown container="body">
+        <a href (click)="false" class="nav-link dropdown-toggle" dropdownToggle>
+          <i class="fas fa-fax"></i> Commandes
+        </a>
+        <div class="dropdown-menu" *dropdownMenu>
+          <a [routerLink]="'/orders/cart'" class="dropdown-item"><i class="fas fa-fw fa-shopping-cart"></i> Panier</a>
+          <a [routerLink]="'/orders/validation'" class="dropdown-item"><i class="fas fa-fw fa-stamp"></i> Commandes à valider</a>
+          <a [routerLink]="'/orders/list'" class="dropdown-item"><i class="fas fa-fw fa-paper-plane"></i> Commandes en cours</a>
+          <a [routerLink]="'/delivery'" class="dropdown-item"><i class="fas fa-fw fa-truck"></i> Réception</a>
+          <a [routerLink]="'/local_delivery'" class="dropdown-item"><i class="fas fa-fw fa-building"></i> Réception magasin</a>
+        </div>
+      </div>
+
+      <div class="nav-item dropdown" dropdown container="body">
+        <a href (click)="false" class="nav-link dropdown-toggle" dropdownToggle>
+          <i class="fas fa-university"></i> Budgets
+        </a>
+        <div class="dropdown-menu" *dropdownMenu>
+          <a [routerLink]="'/budgets'" class="dropdown-item"><i class="fas fa-fw fa-university"></i> Liste des budgets</a>
+          <a [routerLink]="'/budget-lines'" class="dropdown-item"><i class="fas fa-fw fa-list"></i> Lignes budgétaires</a>
+        </div>
+      </div>
+
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-history"></i> Historique</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="'/teams'" [routerLinkActive]="'active'">
+          <i class="fas fa-users"></i> Equipes
+        </a>
+      </li>
+      <li class="nav-item ml-auto" *ngIf="isLoggedIn()">
+        <a class="nav-link">
+          <i class="fas fa-sign-out-alt"></i> déconnexion ({{ currentUser.username }})
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+

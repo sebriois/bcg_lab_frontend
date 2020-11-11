@@ -1,0 +1,60 @@
+
+<h4 *ngIf="loading">
+  <i class="fa fa-spinner fa-spin"></i> Chargement des budgets ...
+</h4>
+
+<ng-container *ngIf="!loading && pagination">
+  <table class="table table-sm table-bordered table-striped" *ngIf="pagination.totalItems > 0">
+    <thead class="table-dark bg-gradient-color5">
+    <tr>
+      <th class="align-middle p-2">Equipe</th>
+      <th class="align-middle p-2">Budget</th>
+      <th class="align-middle p-2">Tutelle</th>
+      <th class="align-middle p-2">Nature</th>
+      <th class="align-middle p-2">Montant dépensé</th>
+      <th class="align-middle p-2">Montant disponible</th>
+      <th class="align-middle p-2"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let budget of budgets">
+      <td class="align-middle p-1">{{ budget.team }}</td>
+      <td class="align-middle p-1">{{ budget.name }}</td>
+      <td class="align-middle p-1">{{ budget.budget_type }}</td>
+      <td class="align-middle p-1">{{ budget.default_nature ? budget.default_nature : 'Toutes'}}</td>
+      <td class="align-middle p-1 text-danger">({{ budget.amount_spent |number:'1.2-2' }})</td>
+      <td class="align-middle p-1"><b>{{ budget.amount_left | number:'1.2-2' }}</b></td>
+      <td class="align-middle p-1">
+        <div class="btn-group">
+          <button type="button" class="btn btn-info btn-sm">
+            <i class="fa fa-list"></i> détail
+          </button>
+          <button type="button" class="btn btn-primary btn-sm">
+            <i class="fa fa-edit"></i> éditer
+          </button>
+          <button type="button" class="btn btn-warning btn-sm">
+            <i class="fa fa-archive"></i> archiver
+          </button>
+          <button type="button" class="btn btn-danger btn-sm">
+            <i class="fa fa-trash"></i> supprimer
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <nav>
+    <pagination class="pagination-sm justify-content-center"
+                previousText="&lsaquo;" nextText="&rsaquo;"
+                firstText="&laquo;" lastText="&raquo;"
+                [itemsPerPage]="pagination.itemsPerPage"
+                [totalItems]="pagination.totalItems"
+                [(ngModel)]="pagination.currentPage"
+                (pageChanged)="loadBudgets($event.page)"
+                [maxSize]="9"
+                [boundaryLinks]="true"
+    ></pagination>
+  </nav>
+</ng-container>
+
+
