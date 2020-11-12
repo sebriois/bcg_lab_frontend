@@ -15,7 +15,7 @@ export class ProductService {
     private http: HttpClient
   ) { }
 
-  retrieve(page: string): Observable<any> {
+  list(page: string): Observable<any> {
     return this.http.get(API_ENDPOINT, {params: {page}});
   }
 

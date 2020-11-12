@@ -1,22 +1,22 @@
-import {Component, OnChanges, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnChanges, OnInit, Output} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Provider, Reseller} from '../../models/providers.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {ProviderService} from '../../services/provider.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-provider-form',
   templateUrl: './provider-form.component.html',
   styleUrls: ['./provider-form.component.scss']
 })
-export class ProviderFormComponent implements OnInit, OnChanges {
+export class ProviderFormComponent implements OnInit {
+  public onClose: Subject<boolean>;
 
-  providerForm: FormGroup;
+  provider: Provider;
   resellers: Array<Reseller>;
   submitting: boolean;
-  hasErrors = false;
-  provider: Provider;
 
   constructor(
     public bsModalRef: BsModalRef,
@@ -26,99 +26,60 @@ export class ProviderFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    this.providerForm = this.formBuilder.group({
-      id: '',
-      name: ['', [Validators.required]],
-      reseller: null,
-      direct_reception: false,
-      is_local: false,
-      is_service: false,
-      notes: '',
-      users_in_charge: [[]]
-    });
+    this.onClose = new Subject();
     this.providerService.getResellers().subscribe(resellers => {
       this.resellers = resellers;
     });
   }
 
-  ngOnChanges() {
-    this.providerForm.reset({
-      id: this.provider && this.provider.id || null,
-      name: this.provider && this.provider.name || '',
-      reseller: this.provider && this.provider.reseller || null,
-      direct_reception: this.provider && this.provider.direct_reception || false,
-      is_local: this.provider && this.provider.is_local || false,
-      is_service: this.provider && this.provider.is_service || false,
-      notes: this.provider && this.provider.notes || '',
-      users_in_charge: this.provider && this.provider.users_in_charge || []
-    });
-  }
-
   setProvider(provider: Provider) {
     this.provider = provider;
-    this.ngOnChanges();
   }
 
-  prepareSaveProvider(): Provider {
-    const formModel = this.providerForm.value;
-
-    const saveProvider: Provider = {
-      id: formModel.id,
-      name: formModel.name as string,
-      direct_reception: formModel.direct_reception as boolean,
-      is_local: formModel.is_local as boolean,
-      is_service: formModel.is_service as boolean,
-      notes: formModel.notes as string,
-      reseller: formModel.reseller as number
-    };
-
-    if (formModel.users_in_charge) {
-      saveProvider.users_in_charge = formModel.users_in_charge;
+  isValid(): boolean {
+    if (!this.provider.name) {
+      return false;
     }
-
-    if (this.provider) {
-      saveProvider.id = this.provider.id;
-    }
-
-    return saveProvider;
+    return true;
   }
 
-  revert() {
-    this.ngOnChanges();
+  closeModal() {
+    this.bsModalRef.hide();
+    this.onClose.next(false);
   }
 
   updateOrCreate() {
     this.submitting = true;
-    const saveProvider = this.providerForm.value;
 
-    if ( this.provider ) {
-      this.providerService.update(saveProvider).subscribe(() => {
-        this.toastr.success('Fournisseur modifié avec succès.', saveProvider.name);
+    if ( !!this.provider.id ) {
+      this.providerService.update(this.provider).subscribe(() => {
+        this.toastr.success('Fournisseur modifié avec succès.', this.provider.name);
         this.bsModalRef.hide();
+        this.onClose.next(true);
         this.submitting = false;
-      }, response => {
+      }, error => {
         this.submitting = false;
-        response.error.forEach(fieldName => {
-          if (this.providerForm.controls.hasOwnProperty(fieldName)) {
-            this.providerForm.controls[fieldName].setErrors({incorrect: true});
-          }
-        });
-        this.hasErrors = true;
+        console.log(error);
+        if (error.hasOwnProperty('errors')) {
+          error.errors.forEach(message => {
+            this.toastr.error(message);
+          });
+        }
       });
     }
     else {
-      this.providerService.create(saveProvider).subscribe(() => {
+      this.providerService.create(this.provider).subscribe(() => {
         this.submitting = false;
-        this.toastr.success('Fournisseur ajouté avec succès.', saveProvider.name);
+        this.toastr.success('Fournisseur ajouté avec succès.', this.provider.name);
         this.bsModalRef.hide();
-      }, response => {
+        this.onClose.next(true);
+      }, httpResponse => {
         this.submitting = false;
-        response.error.forEach(fieldName => {
-          if (this.providerForm.controls.hasOwnProperty(fieldName)) {
-            this.providerForm.controls[fieldName].setErrors({incorrect: true});
-          }
-        });
-        this.hasErrors = true;
+        if (httpResponse.error.hasOwnProperty('errors')) {
+          httpResponse.error.errors.forEach(message => {
+            this.toastr.error(message);
+          });
+        }
       });
     }
   }

@@ -4,6 +4,7 @@ import {Pagination} from '../models/pagination.model';
 import {ProviderService} from '../services/provider.service';
 import {Product} from '../models/products.model';
 import {ProductQuantityFormComponent} from './product-quantity-form/product-quantity-form.component';
+import {ProductService} from '../services/product.service';
 
 @Component({
   selector: 'app-products',
@@ -20,14 +21,10 @@ export class ProductsComponent implements OnInit {
 
   constructor(
     private modalService: BsModalService,
-    private providerService: ProviderService
+    private productService: ProductService
   ) { }
 
   ngOnInit(): void {
-    this.initPagination();
-  }
-
-  initPagination() {
     this.pagination = {
       totalItems: 0,
       itemsPerPage: 50,
@@ -35,16 +32,25 @@ export class ProductsComponent implements OnInit {
       nextPage: null,
       prevPage: null
     };
+    this.loadProducts();
   }
 
-  getPage(event) {
-    this.providerService.retrieve(event.page).subscribe(response => {
+  loadProducts() {
+    this.loading = true;
+    this.productService.list(this.pagination.currentPage.toString()).subscribe(response => {
       this.pagination.totalItems = response.count;
-      this.pagination.currentPage = event.page;
       this.pagination.nextPage = response.next;
       this.pagination.prevPage = response.previous;
       this.products = response.results;
+      this.loading = false;
     });
+  }
+
+  pageChanged(event) {
+    if (event.page !== this.pagination.currentPage) {
+      this.pagination.currentPage = event.page;
+      this.loadProducts();
+    }
   }
 
   searchProducts() {}

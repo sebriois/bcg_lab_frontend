@@ -1,6 +1,7 @@
 export class Product {
     id: number;
     name: string;
+    provider_id: number;
     provider: string;
     origin: string;
     packaging: string;
@@ -10,6 +11,6 @@ export class Product {
     nomenclature: string;
     category: string;
     sub_category: string;
-    expiry: Date;
+    expiry: string;
     last_change: Date;
 }

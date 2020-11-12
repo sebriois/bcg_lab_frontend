@@ -26,6 +26,9 @@ import { BudgetListComponent } from './budgets/budget-list/budget-list.component
 import { BudgetDetailComponent } from './budgets/budget-detail/budget-detail.component';
 import { BudgetFilterFormComponent } from './budgets/budget-filter-form/budget-filter-form.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import { ProductsImportComponent } from './products/products-import/products-import.component';
+import {SortableModule} from 'ngx-bootstrap/sortable';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,8 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
     BudgetLinesComponent,
     BudgetListComponent,
     BudgetDetailComponent,
-    BudgetFilterFormComponent
+    BudgetFilterFormComponent,
+    ProductsImportComponent
   ],
   imports: [
     BrowserModule,
@@ -57,12 +61,14 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    SortableModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 6000,
       progressBar: true,
       extendedTimeOut: 0,
       autoDismiss: false
-    })
+    }),
+    TooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

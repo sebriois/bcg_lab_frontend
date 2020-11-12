@@ -1,31 +1,20 @@
-<div class="modal-header">
-  <h4 class="modal-title pull-left">
-    <span *ngIf="provider">{{ provider.name }}</span>
-    <span *ngIf="!provider">Nouveau fournisseur</span>
-  </h4>
-  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <form (submit)="updateOrCreate()" [formGroup]="providerForm" novalidate>
-    <input type="hidden" formControlName="id" *ngIf="provider" />
-
+<div class="modal-body" *ngIf="provider">
+  <form (submit)="updateOrCreate()">
     <div class="form-group">
       <label for="name">Nom du fournisseur</label>
-      <input type="text" name="name" id="name" class="form-control" formControlName="name">
+      <input type="text" name="name" id="name" class="form-control" [(ngModel)]="provider.name">
     </div>
 
     <div class="form-group">
       <label for="users_in_charge">Responsables</label>
-      <select name="users_in_charge" id="users_in_charge" class="form-control" formControlName="users_in_charge">
+      <select name="users_in_charge" id="users_in_charge" class="form-control" [(ngModel)]="provider.users_in_charge">
         <option></option>
       </select>
     </div>
 
     <div class="form-group">
       <label for="reseller">Revendeur</label>
-      <select name="reseller" id="reseller" class="form-control" formControlName="reseller">
+      <select name="reseller" id="reseller" class="form-control" [(ngModel)]="provider.reseller">
         <option value="null">---------</option>
         <ng-container *ngFor="let reseller of resellers">
           <option [ngValue]="reseller.id" *ngIf="provider && reseller.id !== provider.id">
@@ -37,34 +26,34 @@
 
     <div class="form-group">
       <label for="notes">Notes</label>
-      <textarea name="notes" id="notes" class="form-control" formControlName="notes"></textarea>
+      <textarea name="notes" id="notes" class="form-control" [(ngModel)]="provider.notes"></textarea>
     </div>
 
     <div class="form-check">
       <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" name="is_local" formControlName="is_local"> Fournisseur local
+        <input type="checkbox" class="form-check-input" name="is_local" [(ngModel)]="provider.is_local"> Fournisseur local
         ?
       </label>
     </div>
 
     <div class="form-check">
       <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" name="is_service" formControlName="is_service"> Type service ?
+        <input type="checkbox" class="form-check-input" name="is_service" [(ngModel)]="provider.is_service"> Type service ?
       </label>
     </div>
 
     <div class="form-check">
       <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" name="direct_reception" formControlName="direct_reception">
+        <input type="checkbox" class="form-check-input" name="direct_reception" [(ngModel)]="provider.direct_reception">
         Réception automatique ?
       </label>
     </div>
 
     <div class="btn-group">
-      <button type="button" class="btn btn-outline-secondary" (click)="bsModalRef.hide()">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">
         <i class="fas fa-ban"></i> Fermer
       </button>
-      <button type="submit" class="btn btn-success" [disabled]="providerForm.pristine || providerForm.invalid || submitting">
+      <button type="submit" class="btn btn-success" [disabled]="!isValid() || submitting">
         <i [ngClass]="{'fas': true, 'fa-check': !submitting, 'fa-spin': submitting, 'fa-spinner': submitting}"></i> Valider
       </button>
     </div>

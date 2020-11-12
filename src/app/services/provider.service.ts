@@ -15,8 +15,12 @@ export class ProviderService {
     private http: HttpClient
   ) { }
 
-  retrieve(page: string): Observable<any> {
+  list(page: string): Observable<any> {
     return this.http.get(API_ENDPOINT, {params: {page}});
+  }
+
+  retrieve(id: string): Observable<any> {
+    return this.http.get(API_ENDPOINT + id + '/');
   }
 
   create(provider: Provider): Observable<any> {

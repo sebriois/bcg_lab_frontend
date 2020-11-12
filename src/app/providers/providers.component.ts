@@ -1,8 +1,10 @@
-import {Component, OnInit, Provider} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Pagination} from '../models/pagination.model';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {ProviderFormComponent} from './provider-form/provider-form.component';
 import {ProviderService} from '../services/provider.service';
+import { Provider } from '../models/providers.model';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-providers',
@@ -17,40 +19,49 @@ export class ProvidersComponent implements OnInit {
 
   constructor(
     private modalService: BsModalService,
-    private providerService: ProviderService
+    private providerService: ProviderService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
-    this.initPagination();
+    this.pagination = new Pagination();
+    this.loadProviders();
   }
 
-  initPagination() {
-    this.pagination = {
-      totalItems: 0,
-      itemsPerPage: 50,
-      currentPage: 1,
-      nextPage: null,
-      prevPage: null
-    };
-  }
-
-  getPage(event) {
-    this.providerService.retrieve(event.page).subscribe(response => {
+  loadProviders(page = 1) {
+    this.loading = true;
+    this.providerService.list(page.toString()).subscribe(response => {
       this.pagination.totalItems = response.count;
-      this.pagination.currentPage = event.page;
+      this.pagination.currentPage = page;
       this.pagination.nextPage = response.next;
       this.pagination.prevPage = response.previous;
       this.providers = response.results;
+      this.loading = false;
+    }, error => {
+      this.toastr.error(error);
+      this.loading = false;
     });
 
   }
 
   showCreateForm(): void {
     this.bsModalRef = this.modalService.show(ProviderFormComponent);
+    const provider = new Provider();
+    this.bsModalRef.content.setProvider(provider);
+    this.bsModalRef.content.onClose.subscribe(shouldReload => {
+      if (shouldReload) {
+        this.loadProviders();
+      }
+    });
   }
 
   showEditForm(provider: Provider): void {
     this.bsModalRef = this.modalService.show(ProviderFormComponent);
     this.bsModalRef.content.setProvider(provider);
+    this.bsModalRef.content.onClose.subscribe(shouldReload => {
+      if (shouldReload) {
+        this.loadProviders();
+      }
+    });
   }
 }
