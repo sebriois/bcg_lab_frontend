@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-around align-items-center h-100" id="login_wrapper">
+  <div>
+    <div class="p-20 border bg-white shadow" style="width:390px">
+      <form class="px-3 py-4" (ngSubmit)="login()" method="POST">
+
+        <div class="form-group">
+          <input id="username" type="text" class="form-control rounded-0" [(ngModel)]="username" name="username" >
+        </div>
+
+        <div class="form-group">
+          <input id="password" type="password" class="form-control rounded-0" [(ngModel)]="password" name="password" />
+        </div>
+
+        <button type="submit" class="btn btn-color2 btn-lg mt-2 w-100 rounded-0" [disabled]="loading">
+          <i class="fas fa-sign-in-alt" *ngIf="!loading"></i>
+          <i class="fas fa-spinner fa-spin" *ngIf="loading === true"></i> CONNEXION
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <h3 class="text-color4"><i class="fa fa-briefcase"></i> Gestion des fournisseurs</h3>
+  <h4 *ngIf="loading"><i class="fas fa-spinner fa-spin"></i> chargement ...</h4>
+
+  <ng-container *ngIf="!loading && provider">
+    <p>Mise à jour des produits du fournisseur <b>{{ provider.name }}</b></p>
+  </ng-container>
+
+  <div class="row">
+    <div class="col p-10">
+      <div class="bg-white p-20 shadow border">
+        <h4>A) Sélectionnez le fichier à importer</h4>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label>Fichier à importer *</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="xls_file" name="xls_file" (change)="readFile($event)" />
+                <label class="custom-file-label" for="xls_file">{{ xlsFile ? xlsFile.name : 'Fichier excel' }}</label>
+              </div>
+              <small class="form-text text-muted">Le fichier importé doit être au format xls</small>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="erase" [(ngModel)]="eraseExisting">
+              <label class="form-check-label" for="erase">Ecraser tous les produits existants</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="offer">Offre</label>
+              <input type="text" class="form-control" id="offer" name="offer" [(ngModel)]="offer_nb" />
+            </div>
+            <div class="form-group">
+              <label for="expiry">Date d'expiration</label>
+              <input type="text" class="form-control" id="expiry" name="expiry" [(ngModel)]="expiry" bsDatepicker />
+            </div>
+          </div>
+        </div>
+
+        <h4>B) Veuillez ordonner (par glisser-déposer) les colonnes comme dans votre fichier</h4>
+        <div class="row">
+          <div class="col">
+            <bs-sortable
+              [(ngModel)]="columns"
+              fieldName="name"
+              itemClass="btn btn-outline-secondary btn-sm mx-1"
+              itemActiveClass="sortable-item-active"
+              placeholderItem="Drag here"
+              placeholderClass="placeholderStyle"
+              wrapperClass="sortable-wrapper"
+            ></bs-sortable>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col p-10">
+      <div class="bg-white shadow border p-20" *ngIf="fileContent">
+        <h4>C) Confirmation et importation des produits</h4>
+        <button class="btn btn-primary my-2" (click)="importProducts()" [disabled]="isSubmitting()">
+          <span *ngIf="!isSubmitting()"><i class="fas fa-check"></i> Valider l'import</span>
+          <span *ngIf="isSubmitting()"><i class="fas fa-spin fa-spinner"></i> import en cours ...</span>
+
+        </button>
+        <table class="table table-sm table-bordered table-striped">
+          <thead class="table-dark bg-gradient-color5">
+          <tr>
+            <td></td>
+            <td *ngFor="let column of columns">{{ column.name }}</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let doc of fileContent" [ngClass]="{'text-muted': isInvalid(doc)}">
+            <td [ngClass]="{'text-success': doc.product, 'text-danger': doc.errors}">
+              <i class="fas fa-check" *ngIf="doc.product"></i>
+              <i class="fas fa-ban" *ngIf="doc.errors" [tooltip]="doc.errors.join(', ')"></i>
+              <i class="fas fa-spin fa-spinner" *ngIf="doc.submitting"></i>
+
+              <input type="checkbox" *ngIf="!doc.product && !doc.errors && !doc.submitting"
+                     [(ngModel)]="doc.isSelected" [disabled]="doc.isInvalid" />
+            </td>
+            <ng-container *ngFor="let col of doc.data;let index = index">
+              <td [ngClass]="{'table-danger': isInvalidCol(doc, index)}">{{ col }}</td>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

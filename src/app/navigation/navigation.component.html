@@ -19,7 +19,7 @@
         </a>
       </li>
 
-      <div class="nav-item dropdown" dropdown container="body">
+      <div class="nav-item dropdown" dropdown placement="bottom left" container="body">
         <a href (click)="false" class="nav-link dropdown-toggle" dropdownToggle>
           <i class="fas fa-fax"></i> Commandes
         </a>
@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <div class="nav-item dropdown" dropdown container="body">
+      <div class="nav-item dropdown" dropdown placement="bottom left" container="body">
         <a href (click)="false" class="nav-link dropdown-toggle" dropdownToggle>
           <i class="fas fa-university"></i> Budgets
         </a>
@@ -42,14 +42,28 @@
         </div>
       </div>
 
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-history"></i> Historique</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="'/teams'" [routerLinkActive]="'active'">
-          <i class="fas fa-users"></i> Equipes
+      <div class="nav-item dropdown" dropdown placement="bottom left" container="body">
+        <a href (click)="false" class="nav-link dropdown-toggle" dropdownToggle>
+          <i class="fas fa-history"></i> Historique
         </a>
-      </li>
+        <div class="dropdown-menu" *dropdownMenu>
+          <a [routerLink]="'/history/budgets'" class="dropdown-item"><i class="fas fa-fw fa-university"></i> Historique budgets</a>
+          <a [routerLink]="'/history/orders'" class="dropdown-item"><i class="fas fa-fw fa-fax"></i> Historique commandes</a>
+        </div>
+      </div>
+
+      <div class="nav-item dropdown" dropdown placement="bottom left" container="body">
+        <a href (click)="false" class="nav-link dropdown-toggle" dropdownToggle>
+          <i class="fas fa-shield-alt"></i> Admin
+        </a>
+        <div class="dropdown-menu" *dropdownMenu>
+          <a [routerLink]="'/users'" class="dropdown-item"><i class="fas fa-fw fa-user"></i> Utilisateurs</a>
+          <a [routerLink]="'/teams'" class="dropdown-item"><i class="fas fa-fw fa-users"></i> Equipes</a>
+          <a [routerLink]="'/user-groups'" class="dropdown-item"><i class="fas fa-fw fa-users-cog"></i> Groupes d'utilisateur</a>
+          <a [routerLink]="'/maintenance'" class="dropdown-item"><i class="fas fa-fw fa-tools"></i> Maintenance</a>
+        </div>
+      </div>
+
       <li class="nav-item ml-auto" *ngIf="isLoggedIn()">
         <a class="nav-link">
           <i class="fas fa-sign-out-alt"></i> déconnexion ({{ currentUser.username }})

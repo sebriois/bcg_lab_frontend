@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between mb-2">
+    <h3 class="text-color4">
+      <i class="fa fa-users"></i> Gestion des équipes
+      <small class="text-muted" *ngIf="teams">{{ teams.length }}</small>
+    </h3>
+    <button class="btn btn-primary" (click)="showCreateForm()">
+      <i class="fas fa-plus"></i> ajouter une équipe
+    </button>
+  </div>
+  <h4 *ngIf="loading"><i class="fas fa-spin fa-spinner"></i> loading</h4>
+
+  <ng-container *ngIf="!loading">
+    <div class="row" *ngFor="let team of teams">
+      <div class="col p-10">
+        <div class="bg-white shadow border p-20">
+          <h4>
+            {{ team.fullname }}
+            <button class="btn btn-primary" (click)="showEditForm(team)">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+          </h4>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

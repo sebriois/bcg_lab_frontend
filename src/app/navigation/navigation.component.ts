@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from '../models/users.model';
+import {AuthService} from '../services/auth.service';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-navigation',
@@ -10,20 +12,20 @@ export class NavigationComponent implements OnInit {
   isCollapsed: boolean;
   currentUser: User;
 
-  constructor() { }
+  constructor(
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.isCollapsed = false;
-    this.currentUser = {
-      username: 'briois'
-    };
+    this.currentUser = this.authService.getCurrentUser();
   }
 
   isLoggedIn(): boolean {
-    return true;
+    return this.authService.isLoggedIn();
   }
 
   displayVersion(): string {
-    return 'DEV';
+    return environment.version;
   }
 }

@@ -29,6 +29,11 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import { ProductsImportComponent } from './products/products-import/products-import.component';
 import {SortableModule} from 'ngx-bootstrap/sortable';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import { TeamsComponent } from './teams/teams.component';
+import { UsersComponent } from './users/users.component';
+import { UserFormComponent } from './users/user-form/user-form.component';
+import { TeamFormComponent } from './teams/team-form/team-form.component';
+import { LoginComponent } from './auth/login/login.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +53,12 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     BudgetListComponent,
     BudgetDetailComponent,
     BudgetFilterFormComponent,
-    ProductsImportComponent
+    ProductsImportComponent,
+    TeamsComponent,
+    UsersComponent,
+    UserFormComponent,
+    TeamFormComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

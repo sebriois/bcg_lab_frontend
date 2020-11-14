@@ -1,0 +1,51 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between mb-2">
+    <h3 class="text-color4">
+      <i class="fa fa-user-friends"></i> Gestion des utilisateurs
+      <small class="text-muted" *ngIf="users">{{ users.length }}</small>
+    </h3>
+    <button class="btn btn-primary" (click)="showCreateForm()">
+      <i class="fas fa-plus"></i> ajouter un utilisateur
+    </button>
+  </div>
+  <h4 *ngIf="loading"><i class="fas fa-spin fa-spinner"></i> loading</h4>
+
+  <ng-container *ngIf="!loading">
+
+    <table class="table table-sm table-bordered table-striped">
+      <thead class="table-dark bg-gradient-color5">
+      <tr>
+        <td>Identifiant</td>
+        <td>Utilisateur</td>
+        <td>Email</td>
+        <td>Equipe</td>
+        <td>Dernière connexion</td>
+        <td></td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of users">
+        <td class="align-middle">{{ user.username }}</td>
+        <td class="align-middle">{{ user.first_name }} {{ user.last_name }}</td>
+        <td class="align-middle">{{ user.email }}</td>
+        <td class="align-middle">{{ user.team.name }}</td>
+        <td class="align-middle">{{ user.last_login }}</td>
+        <td class="align-middle">
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary btn-sm" (click)="showEditForm(user)">
+              <i class="fas fa-pencil-alt"></i> éditer
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" (click)="delete(user)">
+              <i class="fas fa-trash"></i> supprimer
+            </button>
+          </div>
+
+          <button type="button" class="btn btn-outline-secondary btn-sm ml-2" (click)="setPassword(user)">
+            <i class="fas fa-key"></i> nouveau mot de passe
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>
